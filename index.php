@@ -1,10 +1,34 @@
 <?php
-require 'vendor/autoload.php';
-require 'config.php';
+if(isset($_GET['code'])){
+    if($_GET['code']==200){
+        echo "
+        <script>
+        alert('Succesfully Imported');
+        document.location.href = 'index.php?table={$_GET['table']}';
+        </script>
+        ";
+    }else if($_GET['code']==403){
+        echo
+        "
+            <script>
+            alert('Only accept xlsx');
+            </script>
+            ";
+    }else{
+        echo
+        "
+            <script>
+            alert('error'+`{$_GET['error']}`);
+            </script>
+            ";
+    }
+}
+if(isset($_GET['table'])){
+    $table=$_GET['table'];
+}else{
+    $table='';
+}
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
-$table = 'fmarketing_schema';
 ?>
 
 <!DOCTYPE html>
@@ -23,12 +47,13 @@ $table = 'fmarketing_schema';
             <label for="excel" class="form-label">匯入excel新增資料</label>
             <div class="input-group mb-3">
                 <input type="file" name="excel_file" id="excel" accept=".xlsx" class="form-control">
+                <input type="hidden" name="table" id="table" class="form-control" value="<?=$table;?>">
                 <input type="submit" value="匯入" name="import" class="btn btn-primary">
             </div>
         </form>
         <select name="project" id="project">
-            <option value="fmarketing_schema">fMarketing</option>
-            <option value="test">test</option>
+            <option value="fmarketing_schema" <?=($table=='fmarketing_schema')?'selected':'';?>>fMarketing</option>
+            <option value="test" <?=($table=='test')?'selected':'';?>>test</option>
         </select>
         <div style="overflow: scroll;height: 85vh;" id='scrolldiv'>
             <table class="table table-striped table-bordered ">
@@ -97,13 +122,16 @@ $table = 'fmarketing_schema';
             let num = 20;
             let project = document.getElementById('project');
             let table = project.value;
+            document.getElementById('table').value = table;
+            load_data();
+
             // 監控選擇的專案
             project.addEventListener('change',function () {
                 table = project.value;
+                document.getElementById('table').value = table;
                 load_data();
             })
 
-            load_data();
 
             // 監控搜尋欄鍵盤動作自動搜尋
             let query = {};
