@@ -34,8 +34,8 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             <td><?=$row['table_name_zh']?></td>
             <td><?=$row['type']?></td>
             <td><?=$row['description']?></td>
-            <td><?=($row['key'])?'Y':''?></td>
-            <td><?=($row['fk'])?'Y':''?></td>
+            <td><?=$row['key']?></td>
+            <td><?=$row['fk']?></td>
             <td><?=$row['default']?></td>
             <td><?=$row['remark']?></td>
         </tr>    
